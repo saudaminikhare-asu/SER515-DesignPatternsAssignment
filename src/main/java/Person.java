@@ -1,20 +1,16 @@
-public interface Person {
+public abstract class Person {
 
 	private ProductMenu theProductMenu;
 
-	private ProductMenu productMenu;
-
-	private ProductMenu productMenu;
-
 	public abstract void showMenu();
 
-	public abstract void showAddButton();
+	public void showAddButton(){}
 
-	public abstract void showViewButton();
+	public void showViewButton(){}
 
-	public abstract void showRadioButton();
+	public void showRadioButton(){}
 
-	public abstract void showLabels();
+	public void showLabels(){}
 
 	public abstract ProductMenu createProductMenu();
 

@@ -6,8 +6,6 @@ public class ClassProductList {
 
 	private ProductIterator productIterator;
 
-	private ProductIterator productIterator;
-
 	public void accept(NodeVisitor visitor) {
 
 	}
