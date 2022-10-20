@@ -1,3 +1,5 @@
+package edu.asu.ptbs;
+
 public interface NodeVisitor {
 
 	public abstract void visitProduct(Product product);

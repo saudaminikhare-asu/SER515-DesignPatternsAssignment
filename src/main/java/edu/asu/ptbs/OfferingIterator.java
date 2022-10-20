@@ -1,6 +1,6 @@
-public class ProductIterator {
+package edu.asu.ptbs;
 
-	private ClassProductList classProductList;
+public class OfferingIterator {
 
 	public boolean hasNext() {
 		return false;

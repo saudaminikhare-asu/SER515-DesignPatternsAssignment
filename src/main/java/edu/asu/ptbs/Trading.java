@@ -1,3 +1,5 @@
+package edu.asu.ptbs;
+
 public class Trading {
 
 	private OfferingList offeringList;

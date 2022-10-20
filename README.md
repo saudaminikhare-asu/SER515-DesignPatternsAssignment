@@ -1,1 +1,0 @@
-# SER515-DesignPatternsAssignment

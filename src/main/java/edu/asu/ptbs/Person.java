@@ -1,3 +1,5 @@
+package edu.asu.ptbs;
+
 public abstract class Person {
 
 	private ProductMenu theProductMenu;
@@ -12,6 +14,9 @@ public abstract class Person {
 
 	public void showLabels(){}
 
+	/*
+	The abstract factory method.
+	 */
 	public abstract ProductMenu createProductMenu();
 
 }

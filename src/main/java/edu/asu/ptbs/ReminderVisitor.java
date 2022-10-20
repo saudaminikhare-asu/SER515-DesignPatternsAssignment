@@ -1,3 +1,5 @@
+package edu.asu.ptbs;
+
 public class ReminderVisitor implements NodeVisitor {
 
 	private ClassProductList classProductList;
