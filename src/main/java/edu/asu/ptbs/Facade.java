@@ -1,219 +1,219 @@
 package edu.asu.ptbs;
 
-//import sun.security.util.Password;
-import javafx.event.ActionEvent;
-import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Node;
-import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.TextField;
-import javafx.scene.text.Text;
-import javafx.stage.Stage;
-
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
+import java.net.URISyntaxException;
+import java.net.URL;
 import java.util.Scanner;
-import java.util.*;
 
 public class Facade {
-	// The type of the user: Buyer: 0, Seller 1
-	private int userType;
-	// The object that holds the currently selected product
-	private Product theSelectedProduct;
-	// The selected product category: 0: Meat, 1: Produce.
-	private int nProductCategory;
+	public int UserType;
+	private Product theSelectedProduct = null;
+	private int nProductCategory = 0;
+	ClassProductList theProductList;
+	Person thePerson;
 
-	private ClassProductList theProductList;
-	// The current user.
-	private Person thePerson;
-	// Show login GUI and return the login result.
-
-	// Login
-	Login loginHandler;
-
-	@FXML
-	private Text actiontarget;
-	@FXML
-	private TextField userNameField;
-	@FXML
-	private TextField passwordField;
-
-	@FXML
-	private Button submitButton;
-
-	public void login(Stage stage) throws IOException {
-		// Load the db map
-		loginHandler = new Login();
-
-		//Read files and create hashmap of users
-		FXMLLoader fxmlLoader = new FXMLLoader(PTBSApplication.class.getResource("login.fxml"));
-		Scene scene = new Scene(fxmlLoader.load(), 320, 240);
-		stage.setTitle("PTBS LOGIN");
-		stage.setScene(scene);
-		stage.show();
+	public Facade() {
 	}
-	@FXML
-	protected void handleLogin(ActionEvent event) throws IOException {
-		// Validation
-		// Check login
-		// Is login successful
-		// Set the userType
-		// Set the person
-		// go to the next scene from here
-		Map <String, String> buyerMap = new HashMap<String, String>();
-		File buyerObj = new File("./src/main/resources/edu/asu/ptbs/BuyerInfo.txt");
-		Scanner buyerReader = new Scanner(buyerObj);
-		while (buyerReader.hasNextLine()) {
-			String data = buyerReader.nextLine();
-			String[] buyerparts = data.split(":");
-			//System.out.println(data);
-			buyerMap.put(buyerparts[0],buyerparts[1]);
-		}
-		buyerReader.close();
 
-		Map <String, String> sellerMap = new HashMap<String, String>();
-		File sellerObj = new File("./src/main/resources/edu/asu/ptbs/SellerInfo.txt");
-		Scanner sellerReader = new Scanner(sellerObj);
-		while (sellerReader.hasNextLine()) {
-			String data = sellerReader.nextLine();
-			String[] sellerparts = data.split(":");
-			//System.out.println(data);
-			sellerMap.put(sellerparts[0],sellerparts[1]);
-		}
-		sellerReader.close();
+	private File getFileFromResource(String fileName) throws URISyntaxException {
 
-		String usernameImput = userNameField.getText();
-		String passwordInput = String.valueOf(passwordField.getText());
-		int loginSuccesful = 0;
+		ClassLoader classLoader = getClass().getClassLoader();
+		URL resource = classLoader.getResource(fileName);
+		if (resource == null) {
+			throw new IllegalArgumentException("file not found! " + fileName);
+		} else {
 
-		for (Map.Entry<String, String> me :
-				buyerMap.entrySet()) {
+			// failed if files have whitespaces or special characters
+			//return new File(resource.getFile());
 
-			// Printing keys
-			if ( usernameImput.equals(me.getKey()))
-			{
-				System.out.println("Buyer exists");
-				if(passwordInput.equals(me.getValue()))
-				{
-					System.out.println("Buyer Successfully logged in");
-					userType = 0;
-					loginSuccesful = 1;
-				}
-				else
-				{
-					System.out.println("Invalid Password! Try Again");
-				}
-			}
+			return new File(resource.toURI());
 		}
 
-		for (Map.Entry<String, String> me :
-				sellerMap.entrySet()) {
+	}
 
-			// Printing keys
-			if ( usernameImput.equals(me.getKey()))
-			{
-				System.out.println("Seller exists");
-				if(passwordInput.equals(me.getValue()))
-				{
-					System.out.println("Seller Successfully logged in");
-					userType = 1;
-					loginSuccesful = 1;
-				}
-				else
-				{
-					System.out.println("Invalid Password! Try Again");
-				}
-			}
-		}
+	static public boolean Login(UserInfoItem userinfoItem) {
+		Login login = new Login();
+		login.setModal(true);
+		login.setVisible(true);
+		userinfoItem.strUserName = login.GetUserName();
+		userinfoItem.UserType = login.GetUserType();
+		return login.isExit();
+	}
 
-		FXMLLoader fxmlLoader = new FXMLLoader(PTBSApplication.class.getResource("login.fxml"));
-		Scene mainScene = new Scene(fxmlLoader.load(), 320, 240);
-		Stage mainStage =(Stage) ((Node)event.getSource()).getScene().getWindow();
-		if (loginSuccesful ==1)
+/////////////////////////
+//functions for CourseMenu
+	/*
+	 * When click the add button of the CourseMenu , call this function this
+	 * function will new an assignment fill the required infomation this function
+	 * will call InstructorAssignmentMenu or StudentAssignmentMenu according to the
+	 * type of the user it will not update the course menu. the coursemenu need to
+	 * refreshed outside the function
+	 */
+
+	void AddTrade(Product theProduct) {
+		TradingMenu theTradingMenu;
+		if (thePerson.type == 0)/// student
 		{
-			String title = "MENU";
-			if (userType == 0)
+			theTradingMenu = new BuyerTradingMenu();
+		} else {
+			theTradingMenu = new SellerTradingMenu();
+		}
+		Trade theTrade = new Trade();
+		theTradingMenu.ShowMenu(theTrade, thePerson);
+		theProduct.addTrade(theTrade);
+	}
+
+	/*
+	 * When click the view button of the CourseMenu , call this function and pass
+	 * the pointer of the Assignment and the person pointer to this function this
+	 * function will new an assignment fill the required infomation this function
+	 * will call InstructorAssignmentMenu or StudentAssignmentMenu according to the
+	 * type of the user
+	 */
+	void ViewTrade(Trade theTrade) {
+		TradingMenu theTradingMenu;
+		if (thePerson.type == 0)/// student
+		{
+			theTradingMenu = new BuyerTradingMenu();
+		} else {
+			theTradingMenu = new SellerTradingMenu();
+		}
+
+		theTradingMenu.ShowMenu(theTrade, thePerson);
+	}
+
+//functions for InstructorAssignmentMenu
+	/*
+	 * this function will grade the give Solution: theSolution this function calls
+	 */
+
+	void GradeOffering(Offering theOffering) {
+		OfferingMenu offeringMenu = new OfferingMenu();
+		offeringMenu.ShowMenu(theOffering);
+	}
+
+	void ReportOfferings(Trade theTrade) {
+		Offering theOffering;
+		OfferingIterator theOfferingIterator;
+		theOfferingIterator = theTrade.getOfferingIterator();
+		theOffering = (Offering) theOfferingIterator.next();
+		while (theOffering != null) {
+			theOffering.setReported(true);
+			theOffering = (Offering) theOfferingIterator.next();
+		}
+	}
+////////////////////
+
+//functions for StudentAssignmentMenu
+	void SubmitOffering(Trade theTrade, Offering theOffering) {
+		theTrade.addOffering(theOffering);
+	}
+
+//////////
+	void Remind() {
+		Reminder theReminder = new Reminder();
+		theReminder.showReminder(thePerson.GetProductList());
+	}
+
+	void CreateUser(UserInfoItem userinfoitem) {
+		if (userinfoitem.UserType == UserInfoItem.USER_TYPE.Buyer) /// student
+		{
+			thePerson = new Buyer();
+		} else /// instructor
+		{
+			thePerson = new Seller();
+		}
+		thePerson.UserName = userinfoitem.strUserName;
+	}
+
+	/*
+	 * create a course list and intitialize it with the file CourseInfo.txt
+	 */
+	void CreateProductList() {
+		theProductList = new ClassProductList();
+		theProductList.InitializeFromFile("ProductInfo.txt");
+	}
+
+	/*
+	 * call this function after create user, create courselist read the
+	 * UserCourse.txt file match the coursename with theCouresList attach the
+	 * Matched course object to the new create user Facade.thePerson.CourseList
+	 */
+	void AttachProductToUser() {
+		Scanner scanner;
+		File file;
+		try {
+			file = getFileFromResource("UserProduct.txt");
+			scanner = new Scanner(file);
+			String strUserName, strProductName, user;
+			while (scanner.hasNextLine()) // not the EOF
 			{
-				title = "BUYER " + title;
+				user = scanner.nextLine();
+				strUserName = GetUserName(user);
+				strProductName = GetProductName(user);
+				if (strUserName.compareTo(thePerson.UserName) == 0) /// the UserName matches
+				{
+					theSelectedProduct = FindProductByProductName(strProductName);
+					if (theSelectedProduct != null) /// Find the Course in the CourseList--->attach
+					{
+						thePerson.AddProduct(theSelectedProduct);
+					}
+				}
 			}
-			else
-			{
-				title = "SELLER " + title;
-				fxmlLoader = new FXMLLoader(PTBSApplication.class.getResource("seller.fxml"));
-				mainScene = new Scene(fxmlLoader.load(), 500, 500);
-				mainStage =(Stage) ((Node)event.getSource()).getScene().getWindow();
-			}
-			mainStage.setTitle(title);
-			mainStage.setScene(mainScene);
+		} catch (Exception ee) {
+			;
 		}
 	}
 
-	/*When clicking the add button of the ProductMenu, call this function.
-	This function will add a new trade and fill in the required information.
-	This function will be called SellerTradingMenu or BuyerTradingMenu based on the type of the user.
-	It will not update the product menu. The product menu needs to be refreshed outside the function.
+	/*
+	 * get the user name from aline UserName:CourseName
 	 */
-	public void addTrading() {
-
+	private String GetUserName(String aline) {
+		int Sep = aline.lastIndexOf(':');
+		return aline.substring(0, Sep);
 	}
 
 	/*
-	When clicking the view button of the ProductMenu, call this function and pass the pointer of the Trading and the person pointer to this function.
-	This function will view the trading information.
-	This function will call SellerTradingMenu or BuyerTradingMenu according to the type of the user.
+	 * get the CourseName from aline UserName:CourseName
 	 */
-	public void viewTrading() {
-
-	}
-
-	public void decideBidding() {
-
-	}
-
-	public void discussBidding() {
-
-	}
-
-	public void submitBidding() {
-
+	private String GetProductName(String aline) {
+		int Sep = aline.lastIndexOf(':');
+		return aline.substring(Sep + 1, aline.length());
 	}
 
 	/*
-	Show the remind box to remind buyer of the upcoming overdue trading window.
+	 * show the course selection dlg, show the course attatched to theperson and
+	 * return the selected course and assign the course to the class member
+	 * theSelectedCourse, the Course Level to CourseLevel CourseLeve=0 High,
+	 * CourseLeve=1 Low
 	 */
-	public void remind() {
-
+	public boolean SelectProduct() {
+		ProductSelectDlg theDlg = new ProductSelectDlg();
+		theSelectedProduct = theDlg.ShowDlg(thePerson.ProductList);
+		thePerson.CurrentProduct = theSelectedProduct;
+		nProductCategory = theDlg.nProductCategory;
+		return theDlg.isLogout();
 	}
 
 	/*
-	Create a user object according to the userinfoitem, the object can be a buyer or a seller.
+	 * call the thePerson.CreateCourseMenu according to the really object(student or
+	 * instructor) and the nCourseLevel it will call different menu creater and show
+	 * the menu;
 	 */
-	public void createUser(UserInfoItem userinfoitem) {
 
+	public boolean ProductOperation() {
+		thePerson.CreateProductMenu(theSelectedProduct, nProductCategory);
+		return thePerson.ShowMenu();//// 0: logout 1 select an other course
 	}
 
 	/*
-	Create the product list of the entire system.
-	*/
-	public void createProductList() {
-
-	}
-
-	public void attachProductToUser() {
-
-	}
-
-	/*
-	Show the Product list in a Dialog and return the selected product.
+	 * find the course in theCourseList that matches strCourseName 1 create a
+	 * CourseIterator for the List 2 Find the Course with the Iterator return the
+	 * pointer of the Course if not fine, return null;
 	 */
-	public int selectProduct() {
-		return 0;
-	}
-
-	public void productOperation() {
-
+	private Product FindProductByProductName(String strProductName) {
+		ProductIterator Iterator = new ProductIterator(theProductList);
+		return (Product) Iterator.next(strProductName);
 	}
 
 }

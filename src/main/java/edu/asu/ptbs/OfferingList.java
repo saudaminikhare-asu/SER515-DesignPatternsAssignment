@@ -1,9 +1,9 @@
 package edu.asu.ptbs;
 
-public class OfferingList {
+import java.util.ArrayList;
 
-	private Offering offering;
+public class OfferingList extends ArrayList<Offering> {
 
-	private Trading trading;
-
+	public OfferingList() {
+	}
 }

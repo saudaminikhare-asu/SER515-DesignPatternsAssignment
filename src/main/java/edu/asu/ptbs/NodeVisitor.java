@@ -1,11 +1,17 @@
 package edu.asu.ptbs;
 
-public interface NodeVisitor {
+abstract public class NodeVisitor {
 
-	public abstract void visitProduct(Product product);
+	public NodeVisitor() {
+	}
 
-	public abstract void visitTrading(Trading trading);
+	public NodeVisitor(Object visitor) {
+	}
 
-	public abstract void visitFacade(Facade facade);
+	abstract public void visitFacade(Facade facade);
+
+	abstract public void visitProduct(Product product);
+
+	abstract public void visitTrade(Trade trade);
 
 }

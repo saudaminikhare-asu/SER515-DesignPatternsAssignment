@@ -2,25 +2,29 @@ package edu.asu.ptbs;
 
 public class Buyer extends Person {
 
-	/*
-	Overridden by the class: buyer and seller to show the menu
-
-	According to the need of buyer show the appropriate items on the menu.
-	 */
-	public void showMenu() {
-
+	public Buyer() {
+		type = 0; // type=0: student
 	}
 
-	/*
-	According to the Product type create a concrete product menu: meat or produce.
-	 */
+	public ProductMenu CreateProductMenu(Product theCourse, int theLevel) {
+
+		if (theLevel == 0) // 0: MeatProduct
+		{
+			theProductMenu = new MeatProductMenu();
+		} else // 1: ProductProduct
+		{
+			theProductMenu = new ProduceProductMenu();
+		}
+		return theProductMenu;
+	}
+
 	@Override
-	public ProductMenu createProductMenu() {
-		return null;
+	public boolean ShowMenu() {
+		super.ShowMenu();
+		showViewButtons();
+		showComboxes();
+		showRadios();
+		show();
+		return ifLogout();
 	}
-
-	public ProductMenu CreateProductMenu() {
-		return null;
-	}
-
 }

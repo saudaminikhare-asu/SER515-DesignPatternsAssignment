@@ -2,23 +2,28 @@ package edu.asu.ptbs;
 
 public class Seller extends Person {
 
-	/*
-	According to the need of seller show the appropriate items on the menu.
-	 */
-	public void showMenu() {
-
+	public Seller() {
+		type = 1; // type=1 :Seller
 	}
 
-	/*
-	According to the Product type create a concrete product menu: meat or produce.
-	 */
-	@Override
-	public ProductMenu createProductMenu() {
-		return null;
+	public ProductMenu CreateProductMenu(Product theProduct, int theLevel) {
+		if (theLevel == 0) // 0: Highlevel defined in CourseSeletDlg.
+		{
+			theProductMenu = new MeatProductMenu();
+		} else // 1: LowLevel
+		{
+			theProductMenu = new ProduceProductMenu();
+		}
+		return theProductMenu;
 	}
 
-	public ProductMenu CreateProductMenu() {
-		return null;
+	public boolean ShowMenu() {
+		super.ShowMenu();
+		showAddButton();
+		showViewButtons();
+		showComboxes();
+		showRadios();
+		show();
+		return ifLogout();
 	}
-
 }

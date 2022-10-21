@@ -23,9 +23,9 @@
 <!--    <Button text="Hello!" onAction="#onHelloButtonClick"/>-->
 <!--</VBox>-->
 
-<GridPane alignment="center" hgap="10" prefHeight="267.0" prefWidth="463.0" vgap="10" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/19" fx:controller="edu.asu.ptbs.Facade">
+<GridPane alignment="center" hgap="10" prefHeight="267.0" prefWidth="463.0" vgap="10" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="edu.asu.ptbs.Facade">
     <padding><Insets bottom="10" left="25" right="25" top="25" /></padding>
-    <Text text="Welcome Seller" wrappingWidth="125.8427734375" GridPane.columnIndex="2" GridPane.columnSpan="2" GridPane.rowIndex="1" />
+    <Text text="Welcome" wrappingWidth="125.8427734375" GridPane.columnIndex="2" GridPane.columnSpan="2" GridPane.rowIndex="1" />
 
     <Label prefHeight="17.0" prefWidth="46.0" text="Meat" GridPane.columnIndex="2" GridPane.rowIndex="2" />
 
